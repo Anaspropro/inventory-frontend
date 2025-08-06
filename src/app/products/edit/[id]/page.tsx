@@ -1,14 +1,21 @@
 "use client";
 
-import { useNavigation } from "@refinedev/core";
+import { useNavigation, useList } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { useParams } from "next/navigation";
-// import { SubmitHandler } from "react-hook-form";
-
+import { useState } from "react";
 
 export default function EditProduct() {
   const navigation = useNavigation();
   const { id } = useParams();
+  const [error, setError] = useState<string>("");
+
+  // Fetch categories for dropdown
+  const { data: categoriesData } = useList({
+    resource: "categories",
+    pagination: { pageSize: 100 },
+  });
+  
   const {
     register,
     handleSubmit,
@@ -25,6 +32,7 @@ export default function EditProduct() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      setError(""); // Clear any previous errors
       const parsedData = {
         ...data,
         price: Number(data.price),
@@ -32,8 +40,15 @@ export default function EditProduct() {
       };
       await onFinish(parsedData);
       navigation.list("products");
-    } catch (error) {
-      console.error("Error creating product:", error);
+    } catch (error: any) {
+      console.error("Error updating product:", error);
+      
+      // Handle duplicate name error - check for 409 status code
+      if (error?.statusCode === 409 || error?.response?.status === 409) {
+        setError("A product with this name already exists. Please choose a different name.");
+      } else {
+        setError("An error occurred while updating the product. Please try again.");
+      }
     }
   });
 
@@ -41,8 +56,15 @@ export default function EditProduct() {
     <div className="p-6 max-w-xl m-auto border border-gray-300 shadow-xl rounded-2xl bg-gray-50">
       <h1 className="text-2xl text-center font-bold mb-4">Edit Product</h1>
 
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={onSubmit} className="space-y-4">
-        <div>          
+        <div>
+          <label className="block font-medium mb-1">Item Name</label>
           <input
             {...register("name", { required: true })}
             placeholder="Item name"
@@ -51,6 +73,22 @@ export default function EditProduct() {
         </div>
 
         <div>
+          <label className="block font-medium mb-1">Category</label>
+          <select
+            {...register("categoryId", { valueAsNumber: true })}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">Select a category</option>
+            {categoriesData?.data.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">Description</label>
           <textarea
             {...register("description")}
             placeholder="Description"
@@ -59,6 +97,7 @@ export default function EditProduct() {
         </div>
 
         <div>
+          <label className="block font-medium mb-1">Price</label>
           <input
             type="number"
             step="0.01"
@@ -69,6 +108,7 @@ export default function EditProduct() {
         </div>
 
         <div>
+          <label className="block font-medium mb-1">Quantity</label>
           <input
             type="number"
             {...register("quantity", { required: true, valueAsNumber: true })}
