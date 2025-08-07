@@ -3,6 +3,15 @@
 import { useNavigation } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { useParams } from "next/navigation";
+import { SubmitHandler } from "react-hook-form";
+
+interface ISupplierForm {
+  name: string;
+  contactPerson: string;
+  email: string;
+  phone: string;
+  address?: string;
+}
 
 export default function EditSupplier() {
   const navigation = useNavigation();
@@ -12,7 +21,7 @@ export default function EditSupplier() {
     handleSubmit,
     formState: { isSubmitting },
     refineCore: { onFinish },
-  } = useForm({
+  } = useForm<ISupplierForm, any, ISupplierForm>({
     refineCoreProps: {
       resource: "suppliers",
       action: "edit",
@@ -21,20 +30,20 @@ export default function EditSupplier() {
     },
   });
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit: SubmitHandler<ISupplierForm> = async (data) => {
     try {
       await onFinish(data);
       navigation.list("suppliers");
     } catch (error) {
       console.error("Error updating supplier:", error);
     }
-  });
+  };
 
   return (
     <div className="p-6 max-w-xl m-auto border border-gray-300 shadow-xl rounded-2xl bg-gray-50">
       <h1 className="text-2xl text-center font-bold mb-4">Edit Supplier</h1>
 
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <input
             {...register("name", { required: true })}

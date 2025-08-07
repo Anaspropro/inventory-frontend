@@ -3,6 +3,15 @@
 import { useNavigation } from "@refinedev/core"
 import { useParams } from "next/navigation";
 import { useForm } from "@refinedev/react-hook-form"
+import { SubmitHandler } from "react-hook-form";
+
+interface IUserForm {
+  firstname: string;
+  lastname: string;
+  department: string;
+  role: string;
+}
+
 const EditUser = () => {
   const navigation = useNavigation();
   const { id } = useParams();
@@ -11,7 +20,7 @@ const EditUser = () => {
     handleSubmit,
     formState: { isSubmitting },
     refineCore: { onFinish },
-  } = useForm({
+  } = useForm<IUserForm, any, IUserForm>({
     refineCoreProps: {
       resource: "users",
       action: "edit",
@@ -20,7 +29,7 @@ const EditUser = () => {
     },
   })
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit: SubmitHandler<IUserForm> = async (data) => {
     try {
       const parsedData = {
         ...data,
@@ -30,13 +39,13 @@ const EditUser = () => {
     } catch (error) {
       console.error("Error editing user:", error);
     }
-  })
+  }
  
   return (
     <div className="p-6 max-w-xl m-auto border border-gray-300 shadow-xl rounded-2xl bg-gray-50">
       <h1 className="text-2xl text-center font-bold mb-4">Edit User</h1>
 
-      <form onSubmit={onSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
           <input
             {...register("firstname", { required: true })}

@@ -5,6 +5,15 @@ import { useForm } from "@refinedev/react-hook-form";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "@/components/ui/loading";
+import { SubmitHandler } from "react-hook-form";
+
+interface ISaleForm {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  notes?: string;
+  status: string;
+}
 
 export default function EditSale() {
   const navigation = useNavigation();
@@ -23,7 +32,7 @@ export default function EditSale() {
     formState: { isSubmitting },
     refineCore: { onFinish },
     setValue,
-  } = useForm({
+  } = useForm<ISaleForm, any, ISaleForm>({
     refineCoreProps: {
       resource: "sales",
       action: "edit",
@@ -46,7 +55,7 @@ export default function EditSale() {
     }
   }, [saleData, setValue]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<ISaleForm> = async (data) => {
     try {
       console.log("Submitting sale update data:", data);
       // Only send the sale metadata, not saleItems

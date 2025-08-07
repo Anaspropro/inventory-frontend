@@ -5,6 +5,7 @@ import { useNavigation, useOne } from "@refinedev/core";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "@/components/ui/loading";
+import { SubmitHandler } from "react-hook-form";
 
 interface ICategoryForm {
   name: string;
@@ -28,7 +29,7 @@ export default function EditCategory() {
     formState: { isSubmitting },
     refineCore: { onFinish },
     setValue,
-  } = useForm<ICategoryForm>({
+  } = useForm<ICategoryForm, any, ICategoryForm>({
     refineCoreProps: {
       resource: "categories",
       action: "edit",
@@ -45,7 +46,7 @@ export default function EditCategory() {
     }
   }, [categoryData, setValue]);
 
-  const onSubmit = async (data: ICategoryForm) => {
+  const onSubmit: SubmitHandler<ICategoryForm> = async (data) => {
     try {
       setError(""); // Clear any previous errors
       const parsedData = {

@@ -4,6 +4,15 @@ import { useNavigation, useList } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { SubmitHandler } from "react-hook-form";
+
+interface IProductForm {
+  name: string;
+  categoryId: number;
+  description?: string;
+  price: number;
+  quantity: number;
+}
 
 export default function EditProduct() {
   const navigation = useNavigation();
@@ -21,7 +30,7 @@ export default function EditProduct() {
     handleSubmit,
     formState: { isSubmitting },
     refineCore: { onFinish },
-  } = useForm({
+  } = useForm<IProductForm, any, IProductForm>({
     refineCoreProps: {
       resource: "products",
       action: "edit",
@@ -30,7 +39,7 @@ export default function EditProduct() {
     },
   });
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit: SubmitHandler<IProductForm> = async (data) => {
     try {
       setError(""); // Clear any previous errors
       const parsedData = {
@@ -50,7 +59,7 @@ export default function EditProduct() {
         setError("An error occurred while updating the product. Please try again.");
       }
     }
-  });
+  };
 
   return (
     <div className="p-6 max-w-xl m-auto border border-gray-300 shadow-xl rounded-2xl bg-gray-50">
@@ -62,7 +71,7 @@ export default function EditProduct() {
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block font-medium mb-1">Item Name</label>
           <input
