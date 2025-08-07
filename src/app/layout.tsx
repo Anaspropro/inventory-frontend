@@ -32,9 +32,6 @@ export default function RootLayout({
                 {
                   name: "dashboard",
                   list: "/dashboard",
-                  // create: "/dashboard/create",
-                  // edit: "/dashboard/edit/:id",
-                  // show: "/dashboard/show/:id",
                   meta: {
                     canDelete: true,
                   },
