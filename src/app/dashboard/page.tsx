@@ -3,6 +3,8 @@
 import { useList, useNavigation } from "@refinedev/core";
 import { useState, useEffect } from "react";
 import Loading from "@/components/ui/loading";
+import HamburgerButton from "@/components/ui/hamburger-button";
+import { useMenu } from "@/components/layout/menu-context";
 
 interface DashboardStats {
   totalProducts: number;
@@ -16,6 +18,7 @@ interface DashboardStats {
 
 export default function Dashboard() {
   const { edit, create } = useNavigation();
+  const { toggleMenu } = useMenu();
   const [stats, setStats] = useState<DashboardStats>({
     totalProducts: 0,
     lowStockProducts: 0,
@@ -108,16 +111,23 @@ export default function Dashboard() {
   const isLoading = productsLoading || salesLoading || ordersLoading || suppliersLoading || categoriesLoading;
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="loading-responsive">
+        <Loading />
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
+    <div className="container-responsive p-responsive">
+      <div className="space-responsive">
+        <div className="flex items-center gap-4 mb-6">
+          <HamburgerButton onClick={toggleMenu} />
+          <h1 className="text-2xl-responsive font-bold text-gray-900">Dashboard</h1>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="stats-grid-responsive">
+          <div className="card-responsive">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-blue-100">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,12 +136,12 @@ export default function Dashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Total Products</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.totalProducts}</p>
+                <p className="text-xl-responsive font-semibold text-gray-900">{stats.totalProducts}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="card-responsive">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-yellow-100">
                 <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,12 +150,12 @@ export default function Dashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Low Stock (&lt;5)</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.lowStockProducts}</p>
+                <p className="text-xl-responsive font-semibold text-gray-900">{stats.lowStockProducts}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="card-responsive">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-red-100">
                 <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,12 +164,12 @@ export default function Dashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Out of Stock</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.outOfStockProducts}</p>
+                <p className="text-xl-responsive font-semibold text-gray-900">{stats.outOfStockProducts}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="card-responsive">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-green-100">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,25 +178,37 @@ export default function Dashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Total Sales</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.totalSales}</p>
+                <p className="text-xl-responsive font-semibold text-gray-900">{stats.totalSales}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button onClick={() => create("products")} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+        <div className="card-responsive">
+          <h2 className="text-xl-responsive font-semibold text-gray-900 mb-4">Quick Actions</h2>
+          <div className="actions-responsive">
+            <button 
+              onClick={() => create("products")} 
+              className="btn-responsive bg-blue-600 text-white hover:bg-blue-700"
+            >
               Add Product
             </button>
-            <button onClick={() => create("orders")} className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+            <button 
+              onClick={() => create("orders")} 
+              className="btn-responsive bg-green-600 text-white hover:bg-green-700"
+            >
               Create Order
             </button>
-            <button onClick={() => create("sales")} className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+            <button 
+              onClick={() => create("sales")} 
+              className="btn-responsive bg-purple-600 text-white hover:bg-purple-700"
+            >
               New Sale
             </button>
-            <button onClick={() => create("reports")} className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+            <button 
+              onClick={() => create("reports")} 
+              className="btn-responsive bg-orange-600 text-white hover:bg-orange-700"
+            >
               Generate Report
             </button>
           </div>

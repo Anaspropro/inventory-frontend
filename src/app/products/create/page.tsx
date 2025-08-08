@@ -59,80 +59,96 @@ export default function CreateProduct() {
   };
 
   return (
-    <div className="p-6 max-w-xl m-auto border border-gray-300 shadow-xl rounded-2xl bg-gray-50">
-      <h1 className="text-2xl text-center font-bold mb-4">Create Product</h1>
+    <div className="container-responsive p-responsive">
+      <div className="max-w-2xl mx-auto">
+        <div className="card-responsive">
+          <h1 className="text-2xl-responsive text-center font-bold mb-6">Create Product</h1>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
+          {error && (
+            <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="form-responsive">
+            <div className="form-group">
+              <label className="block font-medium mb-2 text-gray-700">Item</label>
+              <input
+                {...register("name", { required: true })}
+                className="form-responsive input"
+                placeholder="Enter product name"
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="block font-medium mb-2 text-gray-700">Category</label>
+              <select
+                {...register("categoryId", { valueAsNumber: true })}
+                className="form-responsive select"
+              >
+                <option value="">Select a category</option>
+                {categoriesData?.data.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="block font-medium mb-2 text-gray-700">Description</label>
+              <textarea
+                {...register("description")}
+                className="form-responsive textarea"
+                placeholder="Enter product description"
+                rows={4}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="form-group">
+                <label className="block font-medium mb-2 text-gray-700">Price</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  {...register("price", { required: true, valueAsNumber: true })}
+                  className="form-responsive input"
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="block font-medium mb-2 text-gray-700">Quantity</label>
+                <input
+                  type="number"
+                  {...register("quantity", { required: true, valueAsNumber: true })}
+                  className="form-responsive input"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`btn-responsive bg-blue-600 text-white ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                }`}
+              >
+                {isSubmitting ? "Creating..." : "Create Product"}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigation.list("products")}
+                className="btn-responsive bg-gray-500 text-white hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-      )}
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block font-medium mb-1">Item</label>
-          <input
-            {...register("name", { required: true })}
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Enter product name"
-          />
-        </div>
-
-        <div>
-          <label className="block font-medium mb-1">Category</label>
-          <select
-            {...register("categoryId", { valueAsNumber: true })}
-            className="w-full border px-3 py-2 rounded"
-          >
-            <option value="">Select a category</option>
-            {categoriesData?.data.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block font-medium mb-1">Description</label>
-          <textarea
-            {...register("description")}
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Enter product description"
-          />
-        </div>
-
-        <div>
-          <label className="block font-medium mb-1">Price</label>
-          <input
-            type="number"
-            step="0.01"
-            {...register("price", { required: true, valueAsNumber: true })}
-            className="w-full border px-3 py-2 rounded"
-            placeholder="0.00"
-          />
-        </div>
-
-        <div>
-          <label className="block font-medium mb-1">Quantity</label>
-          <input
-            type="number"
-            {...register("quantity", { required: true, valueAsNumber: true })}
-            className="w-full border px-3 py-2 rounded"
-            placeholder="0"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`bg-blue-600 text-white px-4 py-2 rounded ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
-          }`}
-        >
-          {isSubmitting ? "Creating..." : "Create Product"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

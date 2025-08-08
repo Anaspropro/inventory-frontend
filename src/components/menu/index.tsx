@@ -54,24 +54,19 @@ const Menu = () => {
   ];
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4">
-      <button onClick={() => list("dashboard")} className="text-lg font-semibold mb-4 text-gray-800">Inventory Management</button>
-      <nav>
-        <ul className="space-y-2">
-          {menuItems.map((item, index) => (
-            <li key={index}>
-              <button
-                onClick={item.onClick}
-                className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors flex items-center space-x-3 text-gray-700 hover:text-gray-900"
-              >
-                <span className="text-lg">{item.icon}</span>
-                <span className="font-medium">{item.label}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+    <>
+      {menuItems.map((item, index) => (
+        <li key={index}>
+          <button
+            onClick={item.onClick}
+            className="w-full text-left px-4 py-3 rounded-lg hover:bg-purple-50 transition-colors flex items-center space-x-3 text-purple-700 hover:text-purple-900"
+          >
+            <span className="text-lg">{item.icon}</span>
+            <span className="font-medium">{item.label}</span>
+          </button>
+        </li>
+      ))}
+    </>
   );
 };
 
